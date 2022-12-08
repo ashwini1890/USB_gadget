@@ -60,12 +60,12 @@ echo "PiratePython" > functions/mass_storage.piratepython/lun.0/inquiry_string
 echo "RNDIS" > functions/rndis.usb0/os_desc/interface.rndis/compatible_id
 echo "5162001" > functions/rndis.usb0/os_desc/interface.rndis/sub_compatible_id
 
-echo $MAC_HOST > functions/rndis.usb0/host_addr
-echo $MAC_DEV > functions/rndis.usb0/dev_addr
+#echo $MAC_HOST > functions/rndis.usb0/host_addr    check
+#echo $MAC_DEV > functions/rndis.usb0/dev_addr    check
 
 # Set up the rndis device only first
 
-ln -s functions/rndis.usb0
+#ln -s functions/rndis.usb0   check
 
 #Tell Windows to use config #2
 
@@ -75,7 +75,7 @@ ln -s configs/c.1 os_desc
 # bDeviceClass 0x02
 # bDeviceSubClass 0x02
 
-echo "20980000.usb" > UDC
+#echo "20980000.usb" > UDC check
 
 # Give it time to install
 sleep 5
