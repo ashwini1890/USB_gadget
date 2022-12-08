@@ -15,7 +15,7 @@ echo "fedcba9876543210" > strings/0x409/serialnumber
 echo "Tobias Girstmair" > strings/0x409/manufacturer
 echo "iSticktoit.net USB Device" > strings/0x409/product
 mkdir -p configs/c.1/strings/0x409
-echo "Config 1: ECM network" > configs/c.1/strings/0x409/configuration
+echo "Config 1: RNDIS network" > configs/c.1/strings/0x409/configuration
 echo 250 > configs/c.1/MaxPower
 
 mkdir -p functions/acm.usb0    # serial
@@ -26,17 +26,14 @@ echo 250 > configs/c.1/MaxPower
 ln -s functions/rndis.usb0 configs/c.1/
 ln -s functions/acm.usb0   configs/c.1/
 
-
 # Add functions here
-
 #HID 
 mkdir -p functions/hid.usb0
 echo 1 > functions/hid.usb0/protocol
 echo 1 > functions/hid.usb0/subclass
 echo 8 > functions/hid.usb0/report_length
-echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x$
-ln -s functions/hid.usb0 configs/c.1/  
-# see gadget configurations below
+echo -ne \\x05\\x01\\x09\\x06\\xa1\\x01\\x05\\x07\\x19\\xe0\\x29\\xe7\\x15\\x00\\x25\\x01\\x75\\x01\\x95\\x08\\x81\\x02\\x95\\x01\\x75\\x08\\x81\\x03\\x95\\x05\\x75\\x01\\x05\\x08\\x19\\x01\\x29\\x05\\x91\\x02\\x95\\x01\\x75\\x03\\x91\\x03\\x95\\x06\\x75\\x08\\x15\\x00\\x25\\x65\\x05\\x07\\x19\\x00\\x29\\x65\\x81\\x00\\xc0 > functions/hid.usb0/report_desc
+ln -s functions/hid.usb0 configs/c.1/ 
 
 #RNDIS
 # Windows extensions to force config
@@ -44,17 +41,13 @@ echo "1" > os_desc/use
 echo "0xcd" > os_desc/b_vendor_code
 echo "MSFT100" > os_desc/qw_sign
 
-mkdir strings/0x409
 echo "9112473" > strings/0x409/serialnumber
 echo "Pimoroni Ltd." > strings/0x409/manufacturer
 echo "PiratePython" > strings/0x409/product
-mkdir configs/c.1
-mkdir configs/c.1/strings/0x409
 echo "CDC 2xACM+Mass Storage+RNDIS" > configs/c.1/strings/0x409/configuration
 
 mkdir functions/acm.GS0
 mkdir functions/acm.GS1
-mkdir functions/rndis.usb0 # Flippin' Windows
 mkdir functions/mass_storage.piratepython
 
 echo "/dev/mmcblk0p1" > functions/mass_storage.piratepython/lun.0/file
@@ -72,9 +65,9 @@ echo $MAC_DEV > functions/rndis.usb0/dev_addr
 
 # Set up the rndis device only first
 
-ln -s functions/rndis.usb0 configs/c.1
+ln -s functions/rndis.usb0
 
-# Tell Windows to use config #2
+#Tell Windows to use config #2
 
 ln -s configs/c.1 os_desc
 
@@ -85,12 +78,7 @@ ln -s configs/c.1 os_desc
 echo "20980000.usb" > UDC
 
 # Give it time to install
-
 sleep 5
-
-# Yank it back
-
-echo "" > UDC
 
 # Sneak in all the extra goodies
 
@@ -99,22 +87,13 @@ ln -s functions/acm.GS1 configs/c.1
 ln -s functions/mass_storage.piratepython configs/c.1
 
 # Reset bDeviceClass to 0x00
-# This is essential to make it work in Windows 10
-# Basically forces it to use device information
+# This is essential to make it work in Windows 10# Basically forces it to use device information
 # in the descriptors versus assuming a particular class.
-
-echo "0x00" > bDeviceClass
-
-# Re-attach the gadget
-echo "20980000.usb" > UDC
-
 # BOOM!
 
 ifconfig usb0 up 10.0.99.1
 
 
-
 # End functions
 ls /sys/class/udc > UDC
-
 
