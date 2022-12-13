@@ -1,4 +1,8 @@
 #!/bin/bash
+SERIAL="$(grep Serial /proc/cpuinfo | sed 's/Serial\s*: 0000\(\w*\)/\1/')"
+MAC="$(echo ${SERIAL} | sed 's/\(\w\w\)/:\1/g' | cut -b 2-)"
+MAC_HOST="12$(echo ${MAC} | cut -b 3-)"
+MAC_DEV="02$(echo ${MAC} | cut -b 3-)"
 cd /sys/kernel/config/usb_gadget/
 mkdir -p isticktoit
 cd isticktoit
