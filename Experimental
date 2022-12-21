@@ -14,7 +14,7 @@ echo "Tobias Girstmair" > strings/0x409/manufacturer
 echo "iSticktoit.net USB Device" > strings/0x409/product
 
 mkdir -p configs/c.1/strings/0x409
-echo "Config 1: ECM network" > configs/c.1/strings/0x409/configuration
+echo "Config 1: RNDIS network" > configs/c.1/strings/0x409/configuration
 echo 250 > configs/c.1/MaxPower
 
 # Add functions here
@@ -41,7 +41,7 @@ echo $UCD_DRIVER > UDC
 
 # see gadget configurations below
 # End functions
-ls /sys/class/udc > UDC
+#ls /sys/class/udc > UDC
 
 sleep 0.2
 udevadm settle -t 5 || :
